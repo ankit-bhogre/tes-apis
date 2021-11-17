@@ -11,7 +11,7 @@ const cmsys = require('./src/routes/cms');
 const masters = require('./src/routes/masters');
 const feedbacks = require('./src/routes/feedbacks');
 const payments = require('./src/routes/payments');
-const enablexApi = require('./src/routes/enablexApi');
+//const enablexApi = require('./src/routes/enablexApi');
 //const categories = require('./src/routes/categories');
 
 const admins = require('./src/routes/admin/auth');
@@ -32,7 +32,7 @@ app.use('/cms',cmsys);
 app.use('/master',masters);
 app.use('/',feedbacks);
 app.use('/payments',payments);
-app.use('/enablexapi',enablexApi);
+//app.use('/enablexapi',enablexApi);
 //app.use('/categories',categories);
 
 app.use('/admin',admins);
