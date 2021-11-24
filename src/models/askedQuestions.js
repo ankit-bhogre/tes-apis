@@ -127,6 +127,18 @@ const askedQuestion = sequelize.define('tes_asked_questions', {
 			isNumeric: true,
 		},
     	allowNull: true
+	},	
+	enablexRoomId: {
+		type: DataTypes.STRING,
+		allowNull: true
+	},	
+	enablexServiceId: {
+		type: DataTypes.STRING,
+		allowNull: true
+	},	
+	enablexRoomCreated: {
+		type: DataTypes.STRING,
+		allowNull: true
 	}
 }, {
 	freezeTableName: true,

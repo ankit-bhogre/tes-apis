@@ -16,11 +16,14 @@ const roomObj = {
   owner_ref: 'github sample',
   settings: {
     description: 'Video-Conferencing-Open-Source-Web-Application-Sample',
+	mode: "group",
     scheduled: false,
-    adhoc: true,
-    participants: '2',
-    duration: '30',
+    adhoc: false,
+	moderators: '1',
+    participants: '1',
+    duration: '60',
     quality: 'SD',
+	screen_share: true,
     auto_recording: false,
   },
 };
@@ -108,6 +111,39 @@ vcxroom.createRoom = (callback) => {
       callback(status, data);
     }
   });
+};
+
+vcxroom.createCustRoom = (details,callback) => {
+	const roomMeta = {
+		name: 'room for one to one video meeting',
+		owner_ref: details.askedQuesId,
+		settings: {
+			description: 'one-to-one-video-call-schedule-for-talk-electrical-show',
+			mode: "group",
+			scheduled: false,
+			adhoc: false,
+			moderators: '1',
+			participants: '2',
+			duration: '60',
+			quality: 'SD',
+			screen_share: true,
+			auto_recording: true,
+			wait_for_moderator: false,
+		},
+	};
+	options.path = '/v1/rooms/';
+	options.method = 'POST';
+	options.headers = {
+		'Content-Type': 'application/json',
+		Authorization: `Basic ${vcxutil.getBasicAuthToken()}`,
+	};
+	vcxutil.connectServer(options, JSON.stringify(roomMeta), (status, data) => {
+		if (status === 'success') {
+			callback(status, data);
+		} else if (status === 'error') {
+			callback(status, data);
+		}
+	});
 };
 
 // Function: To create Room

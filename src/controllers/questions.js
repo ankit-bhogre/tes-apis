@@ -12,16 +12,24 @@ const { Op } = require("sequelize");
 const {v4 : uuidv4} = require('uuid');
 const productName = process.env.PRODUCT_NAME;
 
+const vcxroom = require('../routes/vcxroom');
+
 const quesController = {
 	async frontendScheduleAppt (req, res){
 		try {
  			const scheAppTime = Date.parse(req.body.scheAppTime);
 			const askedQuesId = req.body.askedQuesId;
-			//const chk = scheAppTime+' --- '+askedQuesId;
-			await askedQuestion.update({ consultantSchedSts: 1, consultantSchedTime: scheAppTime }, {where: {askedQuesId: askedQuesId}});
- 			res.status(200).send({status:"success", message: 'Your appointment has been confirmed!'});		
+			//const chk = scheAppTime+' --- '+askedQuesId;			
+			await vcxroom.createCustRoom(req.body, (status, createdRoomDetails) => { 				
+				const roomId = createdRoomDetails.room.room_id;
+				const serviceId = createdRoomDetails.room.service_id;
+				const roomCreatedOn = createdRoomDetails.room.created;
+				 askedQuestion.update({ consultantSchedSts: 1, consultantSchedTime: scheAppTime, enablexRoomId: roomId, enablexServiceId: serviceId, enablexRoomCreated: roomCreatedOn }, {where: {askedQuesId: askedQuesId}});
+				res.status(200).send({status:"success", message: 'Your appointment has been confirmed!',roomData:createdRoomDetails});
+			});
+			
 		}catch(error) {
-			res.status(400).send({status:"error",message:error.message});
+			res.status(200).send({status:"error",message:error.message});
 		}		
 	},
 	async askedAssginServiceWorker (req, res){
@@ -176,7 +184,7 @@ const quesController = {
 			askedQuestion.belongsTo(questions, {foreignKey: 'quesId'});
 			askedQuestion.belongsTo(serviceWorkersTbl, {foreignKey: 'workerId'});
 			const resData = await askedQuestion.findAll({ 
-				where: {userId: userId, deletedSts: 0}, attributes: ['askedQuesId', 'encryptAskedQuesId', 'userId', 'quesId', 'quesAmt', 'otherQuesTitle', 'assignServiceWorkerSts', 'workerId', 'solvedSts', 'paymentSts', 'askedDate', 'consultantSchedSts', 'consultantSchedTime', 'ReqActionPerformSts'],
+				where: {userId: userId, deletedSts: 0}, attributes: ['askedQuesId', 'encryptAskedQuesId', 'userId', 'quesId', 'quesAmt', 'otherQuesTitle', 'assignServiceWorkerSts', 'workerId', 'solvedSts', 'paymentSts', 'askedDate', 'consultantSchedSts', 'consultantSchedTime', 'ReqActionPerformSts', 'enablexRoomId'],
 				order: [
 					['askedQuesId', 'desc'],
 					[CustFeedbackTbl, 'feedbackId', 'desc']
