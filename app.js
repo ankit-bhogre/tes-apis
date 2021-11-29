@@ -22,7 +22,7 @@ const verifyJwtToken = require('./src/helpers/verifyJwtToken');
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({extended:true}));
 
 app.use('/',users);
 app.use('/questions',questions); //app.use('/questions',verifyJwtToken,questions);
