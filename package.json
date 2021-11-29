@@ -1,7 +1,7 @@
 {
-  "name": "ec-node-apis-app",
+  "name": "tes-apis",
   "version": "1.0.0",
-  "description": "This is the first ecommerce node apis app",
+  "description": "talk electrical node apis app",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,6 +15,8 @@
     "cors": "^2.8.5",
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^10.0.0",
     "jsonwebtoken": "^8.5.1",
     "log4js": "^6.3.0",
     "md5": "^2.3.0",

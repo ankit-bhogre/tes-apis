@@ -1,15 +1,15 @@
 var http = require('http');
 //var https = require('https');
-//var fs = require('fs');
+var fs = require('fs');
 var app = require('./app');
 const port = process.env.PORT || 5000;
 app.set('port', port);
 
 // Initialization of basic HTTP / HTTPS Service https://azureossd.github.io/2020/02/12/configuring-ssl-certificates-with-nodejs/
-/*const options = {
+const options = {
 	key: fs.readFileSync(process.env.CERTIFICATE_SSL_KEY),
 	cert: fs.readFileSync(process.env.CERTIFICATE_SSL_CERT),
-}; */
+};
 
 /* if (process.env.CERTIFICATE_SSLCACERTS) {
 options.ca = [];
