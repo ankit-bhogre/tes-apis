@@ -9,7 +9,7 @@ app.set('port', port);
 /*const options = {
 	key: fs.readFileSync(process.env.CERTIFICATE_SSL_KEY),
 	cert: fs.readFileSync(process.env.CERTIFICATE_SSL_CERT),
-};*/ 
+}; */
 
 /* if (process.env.CERTIFICATE_SSLCACERTS) {
 options.ca = [];
