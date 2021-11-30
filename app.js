@@ -11,7 +11,7 @@ const cmsys = require('./src/routes/cms');
 const masters = require('./src/routes/masters');
 const feedbacks = require('./src/routes/feedbacks');
 const payments = require('./src/routes/payments');
-//const enablexApi = require('./src/routes/enablexApi');
+const enablexApi = require('./src/routes/enablexApi');
 const events = require('./src/routes/events');
 //const categories = require('./src/routes/categories');
 
@@ -33,7 +33,7 @@ app.use('/cms',cmsys);
 app.use('/master',masters);
 app.use('/',feedbacks);
 app.use('/payments',payments);
-//app.use('/enablexapi',enablexApi);
+app.use('/enablexapi',enablexApi);
 app.use('/',events);
 //app.use('/categories',categories);
 
