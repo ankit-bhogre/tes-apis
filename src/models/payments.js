@@ -1,13 +1,13 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
-const askedQuesPayment = sequelize.define('PaymentInfo', {
+const paymentTbl = sequelize.define('PaymentInfo', {
 	paymentId: {
 		type: DataTypes.INTEGER,
 		autoIncrement: true,
 		primaryKey: true
 	},
-	askedQuesId: {
+	actionForId: {
 		type: DataTypes.INTEGER,
 		validate: {
 			isNumeric: true,
@@ -20,6 +20,13 @@ const askedQuesPayment = sequelize.define('PaymentInfo', {
 			isNumeric: true,
 		},
     	allowNull: false
+	},
+	actionFor: {
+		type: DataTypes.INTEGER,
+		validate: {
+			isNumeric: true,
+		},
+    	allowNull: true
 	},
 	paymentBy: {
 		type: DataTypes.STRING,
@@ -122,10 +129,10 @@ const askedQuesPayment = sequelize.define('PaymentInfo', {
 	}
 }, {
 	freezeTableName: false,
-	tableName: 'tes_asked_question_payments',
+	tableName: 'tes_payments',
 	timestamps: true,
 	createdAt: true,
 	updatedAt: true
 });
 
-module.exports = askedQuesPayment
+module.exports = paymentTbl

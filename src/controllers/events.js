@@ -1,30 +1,55 @@
 const eventsTbl = require('../models/eventsMdl');
 const eventTopicTbl = require('../models/eventTopicMdl');
+const paymentTbl = require('../models/payments');
 const resMsg = require('../helpers/resMsg');
 const slugify = require('slugify');
 const { Op } = require("sequelize");
+const {v4 : uuidv4} = require('uuid');
 
 const eventController = {
 	async frontUpcomingEvents (req, res) {
-		try {			
-			const resData = await eventsTbl.findAll({
+		try {
+			const userId = req.params.userId;
+			eventsTbl.belongsTo(eventTopicTbl, {foreignKey: 'topicId'});
+			eventsTbl.hasMany(paymentTbl, {foreignKey: 'actionForId'});
+			const resData = await eventsTbl.findAll({ 
 				where: {deletedSts: 0, status: 0},
-				attributes: ['eventId', 'eventTitle', 'topicId', 'joinSts', 'joinFee', 'hostBy', 'eventDate', 'eventDuration', 'enablexRoomId', 'eventURL'],
+				attributes: ['eventId', 'encryptEventId', 'eventTitle', 'topicId', 'joinSts', 'joinFee', 'hostBy', 'eventDate', 'eventDuration', 'enablexRoomId', 'eventURL'],
 				order: [
 					['eventDate', 'asc'],
-				]
-			});			
-			res.status(200).send(resData);
+				],
+				include: [{
+					model: eventTopicTbl,
+					attributes: ['topicName'],					
+					required: false
+				},
+				{
+					model: paymentTbl,
+					where: {userId: userId, actionFor: 1},
+					attributes: ['paymentId', 'TxnId'],					
+					required: false
+				}]			
+			});		
+			res.status(200).send(resData);			
 		}catch(error) {
 			res.status(200).send({status:"error",message:error.message});
 		}
 	},
 	async fetchAllEvents (req, res) {
-		try {			
-			const resData = await eventsTbl.findAll({
+		try {	
+			eventsTbl.belongsTo(eventTopicTbl, {foreignKey: 'topicId'});
+			const resData = await eventsTbl.findAll({ 
 				where: {deletedSts: 0},
-				attributes: ['eventId', 'eventTitle', 'topicId', 'hostBy', 'eventDate', 'enablexRoomId' , 'status']
-			});			
+				attributes: ['eventId', 'encryptEventId', 'eventTitle', 'topicId', 'joinSts', 'joinFee', 'hostBy', 'eventDate', 'eventDuration', 'enablexRoomId', 'eventURL', 'status'],
+				order: [
+					['eventDate', 'asc'],
+				],
+				include: [{
+					model: eventTopicTbl,
+					attributes: ['topicName'],					
+					required: false
+				}]			
+			});
 			res.status(200).send(resData);
 		}catch(error) {
 			res.status(200).send({status:"error",message:error.message});
@@ -41,13 +66,19 @@ const eventController = {
 	},
 	async fetchActiveEvents (req, res) {
 		try {			
-			const resData = await eventsTbl.findAll({
+			eventsTbl.belongsTo(eventTopicTbl, {foreignKey: 'topicId'});
+			const resData = await eventsTbl.findAll({ 
 				where: {deletedSts: 0, status: 0},
-				attributes: ['eventId', 'eventTitle', 'topicId', 'hostBy', 'eventDate', 'enablexRoomId'],
+				attributes: ['eventId', 'encryptEventId', 'eventTitle', 'topicId', 'joinSts', 'joinFee', 'hostBy', 'eventDate', 'eventDuration', 'enablexRoomId', 'eventURL'],
 				order: [
-					['eventTitle', 'asc'],
-				]
-			});			
+					['eventDate', 'asc'],
+				],
+				include: [{
+					model: eventTopicTbl,
+					attributes: ['topicName'],					
+					required: false
+				}]			
+			});		
 			res.status(200).send(resData);
 		}catch(error) {
 			res.status(200).send({status:"error",message:error.message});
@@ -65,6 +96,10 @@ const eventController = {
 				const hostBy = req.body.hostBy;
 				const topicId = req.body.topicId;
 				
+				const curDate = new Date();
+				const todayDate = Date.parse(curDate);
+				const EncryptId = uuidv4()+todayDate;	
+				
  				const joinFee = req.body.joinFee;
 				if(parseInt(joinFee)>0){
 					var joinSts = 1;	
@@ -73,7 +108,7 @@ const eventController = {
 				}
 				const eventDuration = req.body.eventDuration;
 				
- 				const resData = await eventsTbl.create({ topicId: topicId, eventTitle: eventTitle, eventSlug: eventSlug, eventDate: eventDate, hostBy: hostBy, joinSts: joinSts, joinFee: joinFee, eventDuration: eventDuration });
+ 				const resData = await eventsTbl.create({ encryptEventId: EncryptId, topicId: topicId, eventTitle: eventTitle, eventSlug: eventSlug, eventDate: eventDate, hostBy: hostBy, joinSts: joinSts, joinFee: joinFee, eventDuration: eventDuration });
 				res.status(200).send({status:"success" ,message:resMsg.success.sMsg12, resData: resData});
 			}else{
 				res.status(200).send({status:"error", message:resMsg.error.eMsg9});

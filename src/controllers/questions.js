@@ -1,5 +1,5 @@
 const askedQuestion = require('../models/askedQuestions');
-const askedQuesPayment = require('../models/askedQuestionPayments');
+const paymentTbl = require('../models/payments');
 const questions = require('../models/question');
 const questionCategory = require('../models/quesCategory');
 const serviceWorkersTbl = require('../models/serviceWorker');
@@ -57,7 +57,7 @@ const quesController = {
 	async askedQuesDetails (req, res) {
 		try {			
 			const askedQuesId = req.params.id;
-			askedQuestion.hasOne(askedQuesPayment, {foreignKey: 'askedQuesId'});			
+			askedQuestion.hasOne(paymentTbl, {foreignKey: 'actionForId'});			
 			askedQuestion.belongsTo(questions, {foreignKey: 'quesId'});
 			askedQuestion.belongsTo(serviceWorkersTbl, {foreignKey: 'workerId'});
 			askedQuestion.hasOne(CustFeedbackTbl, {foreignKey: 'askedQuesId'});
@@ -68,7 +68,8 @@ const quesController = {
 				],
 				include: [
 				{
-					model: askedQuesPayment,
+					model: paymentTbl,
+					where: {actionFor: 0},
 					attributes: ['paymentId', 'TxnId'],					
 					required: false
 				},
@@ -96,7 +97,7 @@ const quesController = {
 	async askedQuesDetailsByEncryptId (req, res) {
 		try {			
 			const encryptAskedQuesId = req.params.id;
-			askedQuestion.hasOne(askedQuesPayment, {foreignKey: 'askedQuesId'});			
+			askedQuestion.hasOne(paymentTbl, {foreignKey: 'actionForId'});			
 			askedQuestion.belongsTo(questions, {foreignKey: 'quesId'});
 			askedQuestion.belongsTo(serviceWorkersTbl, {foreignKey: 'workerId'});
 			askedQuestion.hasOne(CustFeedbackTbl, {foreignKey: 'askedQuesId'});
@@ -107,7 +108,8 @@ const quesController = {
 				],
 				include: [
 				{
-					model: askedQuesPayment,
+					model: paymentTbl,
+					where: {actionFor: 0},
 					attributes: ['paymentId', 'TxnId'],					
 					required: false
 				},
@@ -137,9 +139,9 @@ const quesController = {
 			askedQuestion.belongsTo(User, {foreignKey: 'userId'});
 			askedQuestion.belongsTo(questions, {foreignKey: 'quesId'});
 			const resData = await askedQuestion.findAll({ 
-				where: {solvedSts: 0, paymentSts: 1, deletedSts: 0}, attributes: ['askedQuesId', 'userId', 'quesId', 'quesAmt', 'otherQuesTitle', 'askedDate', 'assignServiceWorkerSts', 'workerId'],
+				where: {solvedSts: 0, paymentSts: 1, deletedSts: 0}, attributes: ['askedQuesId', 'encryptAskedQuesId', 'userId', 'quesId', 'quesAmt', 'otherQuesTitle', 'askedDate', 'consultantSchedSts', 'assignServiceWorkerSts', 'workerId', 'enablexRoomId'],
 				order: [
-					['askedQuesId', 'desc'],
+					['consultantSchedTime', 'asc'],
 				],
 				include: [{
 					model: User,
@@ -179,7 +181,7 @@ const quesController = {
 	async myQuesbyuserId (req, res) {
 		try {			
 			const userId = req.params.id;
-			askedQuestion.hasOne(askedQuesPayment, {foreignKey: 'askedQuesId'});	
+			askedQuestion.hasOne(paymentTbl, {foreignKey: 'actionForId'});	
 			askedQuestion.hasMany(CustFeedbackTbl, {foreignKey: 'askedQuesId'});		
 			askedQuestion.belongsTo(questions, {foreignKey: 'quesId'});
 			askedQuestion.belongsTo(serviceWorkersTbl, {foreignKey: 'workerId'});
@@ -191,8 +193,8 @@ const quesController = {
 				],
 				include: [
 				{
-					model: askedQuesPayment,
-					where: {userId: userId},
+					model: paymentTbl,
+					where: {userId: userId, actionFor: 0},
 					attributes: ['paymentId', 'TxnId'],					
 					required: false
 				},
@@ -238,7 +240,7 @@ const quesController = {
 			if(quesId>0){
 				/*const askedQuesId = askedQuesData.askedQuesId;				
 				const TxnId = req.body.txnId;
-				await askedQuesPayment.create({ askedQuesId: askedQuesId, userId: userId, TxnId: TxnId });
+				await paymentTbl.create({ askedQuesId: askedQuesId, userId: userId, TxnId: TxnId });
 				 need to remove this code*/
 			}else{
 				const adminEmail = 'tns.ankit@gmail.com';

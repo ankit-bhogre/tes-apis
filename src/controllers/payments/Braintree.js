@@ -1,6 +1,6 @@
 const braintree = require("braintree");
 const askedQuestion = require('../../models/askedQuestions');
-const askedQuesPayment = require('../../models/askedQuestionPayments');
+const paymentTbl = require('../../models/payments');
 const resMsg = require('../../helpers/resMsg');
 
 var gateway = new braintree.BraintreeGateway({
@@ -46,10 +46,12 @@ const BraintreeController = {
 		/*createdAt: res.data.transaction.createdAt,
 		updatedAt: res.data.transaction.updatedAt,*/
 		try {
-			const askedQuesId = req.body.askedQuesId;
-			const resData = await askedQuesPayment.create({ 
-				askedQuesId: askedQuesId,
+			const actionForId = req.body.actionForId;
+			const actionFor = req.body.actionFor;
+			const resData = await paymentTbl.create({ 
+				actionForId: actionForId,
 				userId: req.body.userId,
+				actionFor: actionFor,
 				paymentBy: req.body.paymentBy,
 				merchantAccountId: req.body.merchantAccountId,
 				status: req.body.status,
@@ -74,7 +76,9 @@ const BraintreeController = {
 				processorResText: req.body.processorResText,
 				terminalIdentificationNo: req.body.terminalIdentificationNo
 			});
-			await askedQuestion.update({ paymentSts: 1 }, {where: {askedQuesId: askedQuesId}});
+			if(actionFor===0){
+				await askedQuestion.update({ paymentSts: 1 }, {where: {askedQuesId: actionForId}});
+			}
 			res.status(200).send({status:"success",message:resMsg.success.sMsg8});		
 		}catch(error) {
 			res.status(400).send({status:"error",message:error.message});

@@ -3,7 +3,7 @@ let app = express.Router();
 const eventController = require('../controllers/events');
 
 app.get('/events', eventController.fetchAllEvents);
-app.get('/events/front/upcoming', eventController.frontUpcomingEvents);
+app.get('/events/front/upcoming/:userId', eventController.frontUpcomingEvents);
 app.get('/events/active', eventController.fetchActiveEvents);
 app.get('/events/:id', eventController.byId);
 app.post('/events/create', eventController.createEvent);
