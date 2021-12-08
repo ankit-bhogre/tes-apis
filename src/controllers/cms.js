@@ -70,7 +70,7 @@ const cmsController = {
 	async byPageName (req, res) {
 		try {
 			const pageName = req.params.pageName;
-			const resData = await CmsTbl.findAll({
+			const resData = await CmsTbl.findOne({
 				where: {pageName: pageName},
 				order: [
 					['priority', 'asc'],

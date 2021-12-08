@@ -4,7 +4,7 @@ var cors = require('cors');
 
 const users = require('./src/routes/users');
 const cmsys = require('./src/routes/cms');
-//const questions = require('./src/routes/questions');
+const questions = require('./src/routes/questions');
 const serviceWorkers = require('./src/routes/serviceWorkers');
 const referrals = require('./src/routes/referral');
 const coupons = require('./src/routes/coupons');
@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use('/',users);
 app.use('/cms',cmsys);
-//app.use('/questions',questions); //app.use('/questions',verifyJwtToken,questions);
+app.use('/questions',questions); //app.use('/questions',verifyJwtToken,questions);
 app.use('/service',serviceWorkers);
 app.use('/referral',referrals);
 app.use('/',coupons);

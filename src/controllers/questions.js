@@ -3,6 +3,7 @@ const paymentTbl = require('../models/payments');
 const questions = require('../models/question');
 const questionCategory = require('../models/quesCategory');
 const serviceWorkersTbl = require('../models/serviceWorker');
+//const workerTypeTbl = require('../models/workerTypeMdl');
 const CustFeedbackTbl = require('../models/custFeedback');
 const User = require('../models/user')
 const sendMail = require('../helpers/emailSender');
