@@ -13,7 +13,7 @@ const { Op } = require("sequelize");
 const {v4 : uuidv4} = require('uuid');
 const productName = process.env.PRODUCT_NAME;
 
-const vcxroom = require('../routes/vcxroom');
+//const vcxroom = require('../routes/vcxroom');
 
 const quesController = {
 	async frontendScheduleAppt (req, res){
@@ -21,13 +21,13 @@ const quesController = {
  			const scheAppTime = Date.parse(req.body.scheAppTime);
 			const askedQuesId = req.body.askedQuesId;
 			//const chk = scheAppTime+' --- '+askedQuesId;			
-			await vcxroom.createCustRoom(req.body, (status, createdRoomDetails) => { 				
+			/*await vcxroom.createCustRoom(req.body, (status, createdRoomDetails) => { 				
 				const roomId = createdRoomDetails.room.room_id;
 				const serviceId = createdRoomDetails.room.service_id;
 				const roomCreatedOn = createdRoomDetails.room.created;
 				 askedQuestion.update({ consultantSchedSts: 1, consultantSchedTime: scheAppTime, enablexRoomId: roomId, enablexServiceId: serviceId, enablexRoomCreated: roomCreatedOn }, {where: {askedQuesId: askedQuesId}});
 				res.status(200).send({status:"success", message: 'Your appointment has been confirmed!',roomData:createdRoomDetails});
-			});
+			});*/
 			
 		}catch(error) {
 			res.status(200).send({status:"error",message:error.message});
